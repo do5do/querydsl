@@ -43,4 +43,16 @@ public class Member {
         this.team = team;
         team.getMembers().add(this);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Member)) return false;
+
+        Member member = (Member) obj;
+
+//        if (username != null ? !username.equals(member.getUsername()) : member.getUsername() != null) return false;
+//        return true;
+        return username != null ? username.equals(member.getUsername()) : member.getUsername() == null;
+    }
 }

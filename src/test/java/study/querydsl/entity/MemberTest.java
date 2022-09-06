@@ -1,5 +1,6 @@
 package study.querydsl.entity;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -47,5 +48,18 @@ class MemberTest {
             System.out.println("member = " + member);
             System.out.println("member.team = " + member.getTeam());
         }
+    }
+
+    @Test
+    void test() {
+        Member saveMember = new Member("member1", 1);
+        em.persist(saveMember);
+        em.flush();
+        em.clear();
+
+        Member newMember = new Member("member1", 1);
+        Member refMember = em.getReference(Member.class, saveMember.getId());
+
+        Assertions.assertThat(newMember).isEqualTo(refMember);
     }
 }
