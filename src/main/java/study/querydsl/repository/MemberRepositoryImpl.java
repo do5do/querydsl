@@ -65,7 +65,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom { // 이름 
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .fetchResults();
+                .fetchResults(); // fetchResults(): content와 count를 한번에 조회할 수 있다. (각각 두번의 쿼리 호출)
 
         List<MemberTeamDto> content = results.getResults();
         long total = results.getTotal();
@@ -73,8 +73,17 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom { // 이름 
         return new PageImpl<>(content, pageable, total);
     }
 
+    /**
+     * count query 최적화
+     * @param condition 검색 조건
+     * @param pageable 페이징 조건
+     * @return count 쿼리가 생략 가능한 경우 생략해서 처리
+     * -> 페이지 시작이면서 컨텐츠 사이즈(조건에 따라 조회한 컨텐츠 개수)가 페이지 사이즈(한 페이지에 보여줄 개수(== size=5))보다 작을 때
+     * -> 마지막 페이지 일 때 (offset(=어디서부터(몇 번부터) 가져올지) + 컨텐츠 사이즈를 더해서 전체 사이즈 구함)
+     */
     @Override
     public Page<MemberTeamDto> searchPageComplex(MemberSearchCondition condition, Pageable pageable) {
+        // contents query와 count query를 분리
         List<MemberTeamDto> content = queryFactory
                 .select(new QMemberTeamDto(
                         member.id.as("memberId"),
@@ -107,13 +116,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom { // 이름 
                         ageLoe(condition.getAgeLoe())
                 );
 
-        /*
-         * count 쿼리가 생략 가능한 경우 생략해서 처리
-         * -> 페이지 시작이면서 컨텐츠 사이즈가 페이지 사이즈보다 작을 때
-         * -> 마지막 페이지 일 때 (offset(=어디서부터 가져올지) + 컨텐츠 사이즈를 더해서 전체 사이즈 구함)
-         */
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount); // () -> countQuery.fetchCount()
-//        return new PageImpl<>(content, pageable, total);
     }
 
     private BooleanExpression usernameEq(String username) {
