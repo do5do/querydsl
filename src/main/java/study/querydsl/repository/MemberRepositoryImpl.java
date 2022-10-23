@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.data.support.PageableExecutionUtils;
 import study.querydsl.dto.MemberSearchCondition;
 import study.querydsl.dto.MemberTeamDto;
@@ -22,6 +23,8 @@ import static study.querydsl.entity.QTeam.team;
 
 @RequiredArgsConstructor
 public class MemberRepositoryImpl implements MemberRepositoryCustom { // 이름 명명 규칙: {spring data repository name} + Impl
+    // QuerydslRepositorySupport를 사용하려면 extends QuerydslRepositorySupport를 해주고, 지원하는 constructure를 만들어서 사용하면 된다.
+    // 근데 오히려 별로인듯해서 구현하지 않음.
     private final JPAQueryFactory queryFactory;
 
     @Override
