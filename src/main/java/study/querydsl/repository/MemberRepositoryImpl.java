@@ -82,7 +82,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom { // 이름 
      * @param pageable 페이징 조건
      * @return count 쿼리가 생략 가능한 경우 생략해서 처리
      * -> 페이지 시작이면서 컨텐츠 사이즈(조건에 따라 조회한 컨텐츠 개수)가 페이지 사이즈(한 페이지에 보여줄 개수(== size=5))보다 작을 때
-     * -> 마지막 페이지 일 때 (offset(=어디서부터(몇 번부터) 가져올지) + 컨텐츠 사이즈를 더해서 전체 사이즈 구함)
+     * -> 마지막 페이지 일 때 (offset(=어디서부터(몇 번부터) 가져온 건지) + 컨텐츠 사이즈를 더해서 전체 사이즈 구함)
      */
     @Override
     public Page<MemberTeamDto> searchPageComplex(MemberSearchCondition condition, Pageable pageable) {
